@@ -371,7 +371,7 @@ class Connect4:
 
                             # Checamos si el jugador 1 gana
                             if self.winning_move(self.board,self.turn + 1):
-                                label = self.myfont.render("Player 1 wins!!", 1, self.RED)
+                                label = self.myfont.render("Has ganado!!", 1, self.RED)
                                 self.screen.blit(label, (40,10))
                                 self.game_over = True
                             
