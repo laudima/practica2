@@ -11,3 +11,9 @@
 ```
 python conecta4.py [easy,medium,hard]
 ```
+
+Recursos: 
+
+https://roboticsproject.readthedocs.io/en/latest/ConnectFourAlgorithm.html
+
+https://www.youtube.com/watch?v=MMLtza3CZFM
