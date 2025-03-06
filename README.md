@@ -4,4 +4,10 @@
 
 **Cuenta**: 422013628
 
-Conecta 4 programado con Python y Pygame 
+---
+
+**Conecta 4** programado con Python y Pygame. Para correr ejecutar 
+
+```
+python conecta4.py [easy,medium,hard]
+```

@@ -213,6 +213,7 @@ class Connect4:
                 valid_locations.append(col)
         return valid_locations
     
+    # Algoritmo minimax, busqueda del mejor puntaje alternando entre el jugador y el bot
     def min_max(self,board,depth,max_player):
         valid_locations = self.get_valid_locations(board) # vemos las posiciones disponibles para el jugador
         is_terminal = self.is_terminal_node(board)        # vemos si el juego termino
@@ -235,27 +236,32 @@ class Connect4:
                 row = self.get_next_open_row(board,col) # la ficha cae 
                 b_copy = copy.deepcopy(board)
                 self.drop_piece(b_copy,row,col,self.BOT_PIECE)    # se coloca la ficha
-                new_score = self.min_max(b_copy,depth-1,False)[1]  # escogemos el mejor movimiento a partir de la posición actual
-                if new_score > value:
+                new_score = self.min_max(b_copy,depth-1,False)[1]  # escogemos el mejor movimiento a partir de la posición actual, aqui se extiende nuestro arbol de busqueda
+                if new_score > value: # si obtenemos un mejor puntaje guradamos la columna 
                     value = new_score
                     column = col
             return column,value
         else: # Minimizing player
             value = math.inf
+            # Buscamos todas las posibles lugares donde el jugador puede poner la ficha, y vemos cual tiene el mejor puntaje para el bot 
+            # Esto se hara una vez que se vuelva a llamar la función
             for col in valid_locations:
-                row = self.get_next_open_row(board,col)
+                row = self.get_next_open_row(board,col) 
                 b_copy = copy.deepcopy(board)
-                self.drop_piece(b_copy,row,col,self.PLAYER_PIECE)
+                self.drop_piece(b_copy,row,col,self.PLAYER_PIECE) 
                 new_score = self.min_max(b_copy,depth-1,True)[1]
                 if new_score < value:
                     value = new_score
                     column = col
             return column,value
     
+    # Algoritmo poda alfa beta, busqueda del mejor puntaje alternando entre el jugador y el bot
+    # Comente las parte que son diferentes al algoritmo minimax
     def poda_beta_alpha(self,board,depth,alpha,beta,max_player):
         valid_locations = self.get_valid_locations(board)
         is_terminal = self.is_terminal_node(board)
 
+        # Esta parte es igual que el algoritmo minimax
         if depth == 0 or is_terminal:
             if is_terminal:
                 if self.winning_move(board,self.BOT_PIECE):
@@ -267,6 +273,7 @@ class Connect4:
             else:
                 return (None,self.score_position(board,self.BOT_PIECE))
 
+        
         if max_player:
             value = -math.inf
             column = random.choice(valid_locations)
@@ -278,6 +285,11 @@ class Connect4:
                 if new_score > value:
                     value = new_score
                     column = col
+                """
+                En esta parte se hace la poda, si el valor es mayor que beta, no se sigue buscando. 
+                Cuando el algoritmo encuentra un alpha mayor de beta significa que ha encontrado una posicion ganadora 
+                y descarta las demas posiciones. Con esto deja de buscar en el loop y devuelve el valor encontrado.
+                """
                 alpha = max(alpha,value)
                 if alpha >= beta:
                     break
@@ -293,6 +305,7 @@ class Connect4:
                 if new_score < value:
                     value = new_score
                     column = col
+                # En los niveles donde juega el jugador queremos que el puntaje de beta sea el menor posible
                 beta = min(beta, value)
                 if alpha >= beta:
                     break
