@@ -24,6 +24,7 @@ class Connect4:
         self.PLAYER = 0
         self.BOT = 1
         self.EMPTY = 0
+        self.DIFFICULTY = difficulty
 
         # Dimensiones de la ventana
         self.WIDTH = self.COLUMNS * self.PIECE_SIZE
@@ -202,8 +203,6 @@ class Connect4:
     # Función para saber cuando el juego termina
     # Si hay un ganador o si el tablero esta lleno
     def is_terminal_node(self,board):
-        print(self.winning_move(board,self.PLAYER_PIECE))
-        print(self.winning_move(board,self.BOT_PIECE))
         return self.winning_move(board,self.PLAYER_PIECE) or self.winning_move(board,self.BOT_PIECE) or len(self.get_valid_locations(board)) == 0
 
     # Checa donde hay espacio para poner fichas 
@@ -288,7 +287,7 @@ class Connect4:
             column = random.choice(valid_locations)
             for col in valid_locations:
                 row = self.get_next_open_row(board, col)
-                b_copy = board.deepcopy()
+                b_copy = copy.deepcopy(board)
                 self.drop_piece(b_copy, row, col, self.PLAYER_PIECE)
                 new_score = self.poda_beta_alpha(b_copy, depth-1, alpha, beta, True)[1]
                 if new_score < value:
@@ -368,7 +367,7 @@ class Connect4:
                             self.draw_board()
 
             if self.turn == self.BOT and not self.game_over:
-                self.turn_bot(self.board,self.difficulty)
+                self.turn_bot(self.board,self.DIFFICULTY)
                 #self.turn_bot('poda_beta_alpha')
             if self.game_over:
                 pygame.time.wait(3000)
